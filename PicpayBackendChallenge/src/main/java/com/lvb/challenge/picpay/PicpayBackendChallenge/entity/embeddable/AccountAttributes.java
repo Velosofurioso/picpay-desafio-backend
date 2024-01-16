@@ -20,4 +20,6 @@ public class AccountAttributes {
     @Column(unique=true, nullable = false)
     private String email;
 
+    @Column(nullable = true)
+    private String phoneNumber;
 }

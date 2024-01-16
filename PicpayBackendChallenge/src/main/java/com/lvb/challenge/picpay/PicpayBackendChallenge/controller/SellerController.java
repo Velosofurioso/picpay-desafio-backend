@@ -4,10 +4,12 @@ import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.seller.CreateSellerDt
 import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.seller.SellerDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.service.seller.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/seller")
@@ -24,10 +26,10 @@ public class SellerController {
         //TODO add validation for data received
 
         //Service
-        var createdSeller = sellerService.createSeller(createSellerDto);
+        var createdSellerId = sellerService.createSeller(createSellerDto);
 
-        //return ResponseEntity.created().body(createUserDto); TODO add URI no created
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdSeller);
+        final URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdSellerId).toUri();
+        return ResponseEntity.created(uri).body(createSellerDto);
     }
 
     @PutMapping("/{id}")

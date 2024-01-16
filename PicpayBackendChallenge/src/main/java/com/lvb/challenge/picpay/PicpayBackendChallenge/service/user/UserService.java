@@ -4,6 +4,7 @@ import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.user.CreateUserDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.user.UserDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.entity.User;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.repository.UserRepository;
+import com.lvb.challenge.picpay.PicpayBackendChallenge.validations.AccountValidation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,20 +18,24 @@ public class UserService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public UserDto createUser(final CreateUserDto createUserDto) {
+    @Autowired
+    private AccountValidation accountValidation;
+
+    public Long createUser(final CreateUserDto createUserDto) {
 
         // Business Validation
+        accountValidation.newAccountValidation(userRepository, createUserDto.getAccountAttributes().getEmail(), createUserDto.getCpf());
 
         //User Creation
         var mappedUser = modelMapper.map(createUserDto, User.class);
         var user = userRepository.save(mappedUser);
 
-        return modelMapper.map(user, UserDto.class);
+        return user.getId();
     }
 
     public UserDto getUserById(final Long id) {
 
-        // TODO verificar se vale a pena colocar um throw para usuario não encontrado
+        //TODO verificar se vale a pena colocar um throw para usuario não encontrado
 
         var user = findUserById(id);
 
@@ -46,7 +51,7 @@ public class UserService {
         var user = userRepository.findById(id);
 
 
-        // TODO verificar se vale a pena colocar um throw para usuario não encontrado
+        //TODO verificar se vale a pena colocar um throw para usuario não encontrado
 
         return user.orElse(null);
     }

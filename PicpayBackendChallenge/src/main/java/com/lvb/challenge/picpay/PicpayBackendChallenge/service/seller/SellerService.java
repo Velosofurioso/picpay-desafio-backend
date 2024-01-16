@@ -4,6 +4,7 @@ import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.seller.CreateSellerDt
 import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.seller.SellerDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.entity.Seller;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.repository.SellerRepository;
+import com.lvb.challenge.picpay.PicpayBackendChallenge.validations.AccountValidation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,20 +19,24 @@ public class SellerService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public SellerDto createSeller(final CreateSellerDto createSellerDto) {
+    @Autowired
+    private AccountValidation accountValidation;
+
+    public Long createSeller(final CreateSellerDto createSellerDto) {
 
         // Business Validation
+        accountValidation.newAccountValidation(sellerRepository, createSellerDto.getAccountAttributes().getEmail(), createSellerDto.getCnpj());
 
         //Seller Creation
         var mappedSeller = modelMapper.map(createSellerDto, Seller.class);
         var seller = sellerRepository.save(mappedSeller);
 
-        return modelMapper.map(seller, SellerDto.class);
+        return seller.getId();
     }
 
     public SellerDto getSellerById(final Long id) {
 
-        // TODO verificar se vale a pena colocar um throw para usuario não encontrado
+        //TODO verificar se vale a pena colocar um throw para usuario não encontrado
 
         var seller = findSellerById(id);
 
@@ -47,7 +52,7 @@ public class SellerService {
         var seller = sellerRepository.findById(id);
 
 
-        // TODO verificar se vale a pena colocar um throw para Vendedor não encontrado
+        //TODO verificar se vale a pena colocar um throw para Vendedor não encontrado
 
         return seller.orElse(null);
     }

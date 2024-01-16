@@ -15,4 +15,6 @@ public class AccountAttributes implements Serializable {
 
     private String email;
 
+    private String phoneNumber;
+
 }
