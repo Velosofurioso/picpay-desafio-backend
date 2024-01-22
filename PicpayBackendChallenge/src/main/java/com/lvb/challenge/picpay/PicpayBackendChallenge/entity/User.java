@@ -1,11 +1,18 @@
 package com.lvb.challenge.picpay.PicpayBackendChallenge.entity;
 
 import com.lvb.challenge.picpay.PicpayBackendChallenge.entity.base.BaseEntity;
-import com.lvb.challenge.picpay.PicpayBackendChallenge.entity.embeddable.AccountAttributes;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import com.lvb.challenge.picpay.PicpayBackendChallenge.entity.enums.UserType;
 import jakarta.persistence.Table;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Column;
+import lombok.Data;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Table
@@ -17,13 +24,27 @@ import lombok.*;
 @Builder
 public class User extends BaseEntity {
 
-    private AccountAttributes accountAttributes;
+    //CPF or CNPJ
+    @Column(unique=true, nullable = false)
+    private String userDocument;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+
+    @Column(nullable = false)
+    private String firstname;
+
+    @Column
+    private String lastName;
 
     @Column(unique=true, nullable = false)
-    private String cpf;
+    private String email;
 
-    //TODO considerar remover ese campo da entidade com a autenticacao com keycloak
-    @Column(nullable = false)
-    private String password;
+    @Column
+    private String phoneNumber;
+
+    @Column(unique=true, nullable = false)
+    private String userIdKeycloak;
 
 }

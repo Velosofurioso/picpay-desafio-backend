@@ -25,6 +25,8 @@ public class UserController {
         // Data Validation
         //TODO add validation for data received
 
+        // Password Validation
+
         //Service
         var createdUserId = userService.createUser(createUserDto);
 

@@ -4,7 +4,8 @@ import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.user.CreateUserDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.user.UserDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.entity.User;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.repository.UserRepository;
-import com.lvb.challenge.picpay.PicpayBackendChallenge.validations.AccountValidation;
+import com.lvb.challenge.picpay.PicpayBackendChallenge.service.keycloak.KeyCloakService;
+import com.lvb.challenge.picpay.PicpayBackendChallenge.validations.UserValidation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,18 +17,25 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private KeyCloakService keyCloakService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
-    private AccountValidation accountValidation;
+    private UserValidation userValidation;
 
     public Long createUser(final CreateUserDto createUserDto) {
 
         // Business Validation
-        accountValidation.newAccountValidation(userRepository, createUserDto.getAccountAttributes().getEmail(), createUserDto.getCpf());
+        userValidation.newAccountValidation(createUserDto);
 
-        //User Creation
+        // Create a new User in Keycloak
+        final String keycloakUserId = keyCloakService.createUser(createUserDto);
+
+        //Create a new User in DB
         var mappedUser = modelMapper.map(createUserDto, User.class);
+        mappedUser.setUserIdKeycloak(keycloakUserId);
         var user = userRepository.save(mappedUser);
 
         return user.getId();
@@ -66,12 +74,13 @@ public class UserService {
 
         //TODO validar se vale a pena separar as o codigo abaixo para outra funcao
         var newUser = modelMapper.map(userDto, User.class);
-
         newUser.setId(oldUser.getId());
-        newUser.setPassword(oldUser.getPassword());
+        newUser.setUserIdKeycloak(oldUser.getUserIdKeycloak());
         newUser.setCreatedAt(oldUser.getCreatedAt());
 
         userRepository.save(newUser);
+
+        keyCloakService.updateUser(userDto, newUser.getUserIdKeycloak());
     }
 
     public void deleteUser(final Long id) {
@@ -83,5 +92,6 @@ public class UserService {
         }
 
         userRepository.delete(oldUser);
+        keyCloakService.removeUser(oldUser.getUserIdKeycloak());
     }
 }
