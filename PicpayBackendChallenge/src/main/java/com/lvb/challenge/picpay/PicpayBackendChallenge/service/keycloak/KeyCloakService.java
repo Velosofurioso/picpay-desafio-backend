@@ -1,5 +1,6 @@
 package com.lvb.challenge.picpay.PicpayBackendChallenge.service.keycloak;
 
+import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.account.AccountDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.user.CreateUserDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.user.UserDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.security.Credentials;
@@ -22,9 +23,9 @@ public class KeyCloakService {
     @Autowired
     private UsersResource usersResource;
 
-    public String createUser(CreateUserDto createUserDto) {
+    public String createAccount(final AccountDto accountDto, final String password) {
 
-        final UserRepresentation user = buildUserKeycloak(createUserDto, createUserDto.getPassword());
+        final UserRepresentation user = buildUserKeycloak(accountDto, password);
 
         final Response response = usersResource.create(user);
 
@@ -32,19 +33,19 @@ public class KeyCloakService {
         return CreatedResponseUtil.getCreatedId(response);
     }
 
-    public void updateUser(final UserDto userDto, final String userId) {
+    public void updateAccount(final AccountDto accountDto, final String accountId) {
 
-        final UserResource userResource = usersResource.get(userId);
+        final UserResource userResource = usersResource.get(accountId);
 
-        final UserRepresentation userRepresentation = buildUserKeycloak(userDto, null);
+        final UserRepresentation userRepresentation = buildUserKeycloak(accountDto, null);
 
         userResource.update(userRepresentation);
 
         //TODO add error treatment here
     }
 
-    public void removeUser(final String userId) {
-        final UserResource userResource = usersResource.get(userId);
+    public void removeAccount(final String accountId) {
+        final UserResource userResource = usersResource.get(accountId);
         userResource.remove();
         //TODO add error treatment here
     }
@@ -63,7 +64,7 @@ public class KeyCloakService {
         //TODO add error treatment here
     }
 
-    private UserRepresentation buildUserKeycloak(final UserDto userDto, final String password) {
+    private UserRepresentation buildUserKeycloak(final AccountDto accountDto, final String password) {
         final UserRepresentation user = new UserRepresentation();
 
         if (password != null) {
@@ -73,10 +74,10 @@ public class KeyCloakService {
             user.setCredentials(Collections.singletonList(credential));
         }
 
-        user.setUsername(Utils.getUsernameFromEmail(userDto.getEmail()));
-        user.setFirstName(userDto.getFirstname());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
+        user.setUsername(Utils.getUsernameFromEmail(accountDto.getEmail()));
+        user.setFirstName(accountDto.getFirstname());
+        user.setLastName(accountDto.getLastName());
+        user.setEmail(accountDto.getEmail());
 
         user.setRequiredActions(Collections.emptyList());
         //TODO remove the line below

@@ -3,20 +3,18 @@ package com.lvb.challenge.picpay.PicpayBackendChallenge.entity;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.entity.enums.UserType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Table
 @Data
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class User extends AccountBase {
+public class Seller extends AccountBase {
 
-    public User () {
+    public Seller () {
         super();
-        this.setUserType(UserType.USER);
+        this.setUserType(UserType.SELLER);
     }
 
 }

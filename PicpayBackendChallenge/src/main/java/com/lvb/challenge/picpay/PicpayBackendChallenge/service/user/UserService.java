@@ -5,7 +5,7 @@ import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.user.UserDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.entity.User;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.repository.UserRepository;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.service.keycloak.KeyCloakService;
-import com.lvb.challenge.picpay.PicpayBackendChallenge.validations.UserValidation;
+import com.lvb.challenge.picpay.PicpayBackendChallenge.validations.AccountValidation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,15 +23,15 @@ public class UserService {
     private ModelMapper modelMapper;
 
     @Autowired
-    private UserValidation userValidation;
+    private AccountValidation accountValidation;
 
     public Long createUser(final CreateUserDto createUserDto) {
 
         // Business Validation
-        userValidation.newAccountValidation(createUserDto);
+        accountValidation.newAccountValidation(createUserDto, userRepository);
 
         // Create a new User in Keycloak
-        final String keycloakUserId = keyCloakService.createUser(createUserDto);
+        final String keycloakUserId = keyCloakService.createAccount(createUserDto, createUserDto.getPassword());
 
         //Create a new User in DB
         var mappedUser = modelMapper.map(createUserDto, User.class);
@@ -80,7 +80,7 @@ public class UserService {
 
         userRepository.save(newUser);
 
-        keyCloakService.updateUser(userDto, newUser.getUserIdKeycloak());
+        keyCloakService.updateAccount(userDto, newUser.getUserIdKeycloak());
     }
 
     public void deleteUser(final Long id) {
@@ -92,6 +92,6 @@ public class UserService {
         }
 
         userRepository.delete(oldUser);
-        keyCloakService.removeUser(oldUser.getUserIdKeycloak());
+        keyCloakService.removeAccount(oldUser.getUserIdKeycloak());
     }
 }

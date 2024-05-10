@@ -1,4 +1,4 @@
-package com.lvb.challenge.picpay.PicpayBackendChallenge.dto.user;
+package com.lvb.challenge.picpay.PicpayBackendChallenge.dto.seller;
 
 import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.account.AccountDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.entity.enums.UserType;
@@ -9,11 +9,10 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserDto extends AccountDto implements Serializable {
+public class SellerDto extends AccountDto implements Serializable {
 
-    public UserDto() {
+    public SellerDto() {
         super();
-        this.setUserType(UserType.USER);
+        this.setUserType(UserType.SELLER);
     }
 }
-

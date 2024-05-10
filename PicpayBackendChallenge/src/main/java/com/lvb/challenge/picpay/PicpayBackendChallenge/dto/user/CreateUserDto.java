@@ -16,6 +16,6 @@ import java.io.Serializable;
 public class CreateUserDto extends UserDto implements Serializable {
 
     @NonNull
-    String password;
+    private String password;
 
 }
