@@ -5,12 +5,13 @@ import com.lvb.challenge.picpay.PicpayBackendChallenge.entity.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Data
 @ToString
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-@MappedSuperclass
 public class AccountBase extends BaseEntity {
 
     //For Seller documentNumber is CNPJ
@@ -35,5 +36,8 @@ public class AccountBase extends BaseEntity {
 
     @Column(unique=true, nullable = false)
     private String userIdKeycloak;
+
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    private AccountBalance accountBalance;
 
 }

@@ -4,6 +4,7 @@ import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.user.CreateUserDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.user.UserDto;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.entity.User;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.repository.UserRepository;
+import com.lvb.challenge.picpay.PicpayBackendChallenge.service.accountBalance.AccountBalanceService;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.service.keycloak.KeyCloakService;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.validations.AccountValidation;
 import org.modelmapper.ModelMapper;
@@ -25,6 +26,9 @@ public class UserService {
     @Autowired
     private AccountValidation accountValidation;
 
+    @Autowired
+    private AccountBalanceService accountBalanceService;
+
     public Long createUser(final CreateUserDto createUserDto) {
 
         // Business Validation
@@ -37,6 +41,7 @@ public class UserService {
         var mappedUser = modelMapper.map(createUserDto, User.class);
         mappedUser.setUserIdKeycloak(keycloakUserId);
         var user = userRepository.save(mappedUser);
+        accountBalanceService.initBalance(mappedUser);
 
         return user.getId();
     }
@@ -91,6 +96,7 @@ public class UserService {
             return ;
         }
 
+        accountBalanceService.removeBalance(oldUser);
         userRepository.delete(oldUser);
         keyCloakService.removeAccount(oldUser.getUserIdKeycloak());
     }

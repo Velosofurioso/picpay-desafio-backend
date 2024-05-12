@@ -15,6 +15,8 @@ import java.net.URI;
 @RequestMapping("/user")
 public class UserController {
 
+    //TODO criar uma estrutura com  account controller generico
+
     @Autowired
     private UserService userService;
 
