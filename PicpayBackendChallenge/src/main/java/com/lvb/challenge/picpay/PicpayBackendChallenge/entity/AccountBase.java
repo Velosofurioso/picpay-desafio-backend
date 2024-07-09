@@ -32,7 +32,13 @@ public class AccountBase extends BaseEntity {
     private String email;
 
     @Column
+    private Boolean emailValidated = false;
+
+    @Column
     private String phoneNumber;
+
+    @Column
+    private Boolean phoneNumberValidated = false;
 
     @Column(unique=true, nullable = false)
     private String userIdKeycloak;
