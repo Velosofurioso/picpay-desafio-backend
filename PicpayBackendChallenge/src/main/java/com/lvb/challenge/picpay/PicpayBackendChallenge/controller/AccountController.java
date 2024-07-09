@@ -1,9 +1,10 @@
 package com.lvb.challenge.picpay.PicpayBackendChallenge.controller;
 
-import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.account.MakeTransferDTO;
+import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.account.transfer.MakeTransferDTO;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.dto.account.ValidateCodeDTO;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.enums.ValidationType;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.service.account.AccountService;
+import com.lvb.challenge.picpay.PicpayBackendChallenge.service.transfer.TransferService;
 import com.lvb.challenge.picpay.PicpayBackendChallenge.validations.TransfersValidation;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,21 +30,22 @@ public class AccountController {
     private TransfersValidation transfersValidation;
 
     @Autowired
+    private TransferService transferService;
+
+    @Autowired
     private AccountService accountService;
 
     @PostMapping("/transfer")
     @ResponseBody
-    ResponseEntity<MakeTransferDTO> makeTransfers(@Validated @RequestBody MakeTransferDTO makeTransferDTO) {
+    ResponseEntity<MakeTransferDTO> makeTransfers(@Validated @RequestBody final MakeTransferDTO makeTransferDTO) {
 
         // Data Validation
         transfersValidation.validateTransfers(makeTransferDTO);
 
         //Service
-        //var createdSellerId = sellerService.createSeller(createSellerDto);
+        transferService.doTransfer(makeTransferDTO);
 
-       // final URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdSellerId).toUri();
-       // return ResponseEntity.created(uri).body(makeTransferDTO);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
 

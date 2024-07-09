@@ -35,5 +35,27 @@ public class AccountBalanceService {
         accountBalanceRepository.delete(accountBase.getAccountBalance());
     }
 
-    //public void
+    public void increaseBalance(final AccountBase accountBase, final BigDecimal increaseQty) {
+        if (accountBase == null) return;
+        else if (accountBase.getAccountBalance() == null)  return;
+
+        final BigDecimal newBalanceQty = accountBase.getAccountBalance().getAvailableValue().add(increaseQty);
+        accountBase.getAccountBalance().setAvailableValue(newBalanceQty);
+
+        accountBalanceRepository.save(accountBase.getAccountBalance());
+
+        //TODO save the balance movements in another table
+    }
+
+    public void decreaseBalance(final AccountBase accountBase, final BigDecimal increaseQty) {
+        if (accountBase == null) return;
+        else if (accountBase.getAccountBalance() == null)  return;
+
+        final BigDecimal newBalanceQty = accountBase.getAccountBalance().getAvailableValue().subtract(increaseQty);
+        accountBase.getAccountBalance().setAvailableValue(newBalanceQty);
+
+        accountBalanceRepository.save(accountBase.getAccountBalance());
+
+        //TODO save the balance movements in another table
+    }
 }

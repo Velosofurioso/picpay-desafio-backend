@@ -98,7 +98,7 @@ public class AccountService {
         redisTemplate.remove(accountId);
     }
 
-    private AccountBase findAccountById(final long accountId) {
+    public AccountBase findAccountById(final long accountId) {
         Optional<AccountBase> account;
 
         account = sellerRepository.findById(accountId).map(seller -> seller);

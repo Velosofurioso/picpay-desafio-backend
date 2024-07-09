@@ -1,4 +1,4 @@
-package com.lvb.challenge.picpay.PicpayBackendChallenge.dto.account;
+package com.lvb.challenge.picpay.PicpayBackendChallenge.dto.account.transfer;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class MakeTransferDTO implements Serializable {
 
-    private BigDecimal transferValue;
+    private BigDecimal transferValue = BigDecimal.ZERO;
 
     private Long payer;
 

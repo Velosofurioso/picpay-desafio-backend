@@ -1,11 +1,16 @@
 package com.lvb.challenge.picpay.PicpayBackendChallenge.util;
 
+import java.math.BigDecimal;
 import java.util.Random;
 
 public class Utils {
 
     public static String getUsernameFromEmail(final String email) {
         return email.split("@")[0];
+    }
+
+    public static boolean bigDecimalEquals(final BigDecimal val1, final BigDecimal val2) {
+        return (val1.compareTo(val2) == 0);
     }
 
     public static long generateRandomNumber() {
