@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.lvb.challenge.picpay</groupId>
 	<artifactId>PicpayBackendChallenge</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>PicpayBackendChallenge</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -60,6 +60,16 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-streams</artifactId>
 		</dependency>
 
 		<dependency>
